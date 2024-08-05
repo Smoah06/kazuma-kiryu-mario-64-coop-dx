@@ -29,7 +29,7 @@ function kiryu_attack(m)
     end
     stepResult = perform_ground_step(m)
     if is_anim_at_end(m) ~= 0 then
-        checked = false
+        gPlayerSyncTable[m.playerIndex].checked = false
         audio_sample_play(PUNCH_1_SOUND, m.pos, 1)
         return set_mario_action(m, ACT_COMBO_1, 0)
     end
@@ -49,7 +49,7 @@ function combo1(m)
     end
     if (m.input & INPUT_B_PRESSED) ~= 0 and (m.actionTimer > 4 and m.actionTimer <= 15) then
 
-        checked = false
+        gPlayerSyncTable[m.playerIndex].checked = false
 
         audio_sample_play(PUNCH_2_SOUND, m.pos, 1)
         return set_mario_action(m, ACT_COMBO_2, 0)
@@ -58,8 +58,7 @@ function combo1(m)
         return set_mario_action(m, ACT_WALKING, 0)
     end
 
-    check_for_bowser(m)
-    check_for_kingbobomb(m)
+    check_for_behaviours(m)
 
     stepResult = perform_ground_step(m)
 
@@ -77,9 +76,9 @@ function combo2(m)
     else
         mario_set_forward_vel(m, 0)
     end
-    if (m.input & INPUT_B_PRESSED) ~= 0 and (m.actionTimer > 3 and m.actionTimer <= 15) then
+    if (m.input & INPUT_B_PRESSED) ~= 0 and (m.actionTimer > 4 and m.actionTimer <= 15) then
 
-        checked = false
+        gPlayerSyncTable[m.playerIndex].checked = false
 
         audio_sample_play(PUNCH_3_SOUND, m.pos, 1)
         return set_mario_action(m, ACT_COMBO_3, 0)
@@ -88,8 +87,7 @@ function combo2(m)
         return set_mario_action(m, ACT_WALKING, 0)
     end
 
-    check_for_bowser(m)
-    check_for_kingbobomb(m)
+    check_for_behaviours(m)
 
     stepResult = perform_ground_step(m)
 
@@ -107,9 +105,9 @@ function combo3(m)
     else
         mario_set_forward_vel(m, 0)
     end
-    if (m.input & INPUT_B_PRESSED) ~= 0 and (m.actionTimer > 5 and m.actionTimer <= 15) then
+    if (m.input & INPUT_B_PRESSED) ~= 0 and (m.actionTimer > 7 and m.actionTimer <= 15) then
 
-        checked = false
+        gPlayerSyncTable[m.playerIndex].checked = false
         
         audio_sample_play(PUNCH_4_SOUND, m.pos, 1)
         mario_set_forward_vel(m, 100)
@@ -119,8 +117,7 @@ function combo3(m)
         return set_mario_action(m, ACT_WALKING, 0)
     end
 
-    check_for_bowser(m)
-    check_for_kingbobomb(m)
+    check_for_behaviours(m)
 
     stepResult = perform_ground_step(m)
 
@@ -143,8 +140,7 @@ function combo4(m)
     end
     stepResult = perform_ground_step(m)
 
-    check_for_bowser(m)
-    check_for_kingbobomb(m)
+    check_for_behaviours(m)
 
     m.actionTimer = m.actionTimer + 1
 end
@@ -155,13 +151,12 @@ function dropkick(m)
     smlua_anim_util_set_animation(m.marioObj, "DropKick")
     --m.forwardVel = 15
     if m.actionTimer == 0 then
-        checked = false
+        gPlayerSyncTable[m.playerIndex].checked = false
         audio_sample_play(DROPKICK_SOUND, m.pos, 1)
         m.vel.y = 30
     end
 
-    check_for_bowser(m)
-    check_for_kingbobomb(m)
+    check_for_behaviours(m)
     -- if m.actionTimer >= 16 then
     --     set_anim_to_frame(m, 16)
     -- end
@@ -175,32 +170,61 @@ function dropkick(m)
     m.actionTimer = m.actionTimer + 1
 end
 
-function check_for_bowser(m)
-    if checked == false then
-        enemyobj = obj_get_nearest_object_with_behavior_id(m.marioObj, id_bhvBowser)
-        if enemyobj ~= nil and enemyobj.oDistanceToMario <= 300.0 then
-            checked = true 
-            m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
-            enemyobj.oForwardVel = enemyobj.oForwardVel - 10
-            enemyobj.oVelY = 2
-            if m.action == ACT_COMBO_4 or m.action == ACT_DROPKICK then
-                enemyobj.oForwardVel = enemyobj.oForwardVel - 50
-                enemyobj.oVelY = 20
-            end
-        end
+local chainChompHealth = 4
+function check_for_chainchomp(m, enemyobj)
+    m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
+    chainChompHealth = chainChompHealth - 1
+    if chainChompHealth <= 0 then
+        --bhv_chain_chomp_gate_update()
+        enemyobj.oSubAction = CHAIN_CHOMP_SUB_ACT_LUNGE
+        enemyobj.oChainChompMaxDistFromPivotPerChainPart = 9999999.0
+        enemyobj.oForwardVel = -300.0
+        enemyobj.oVelY = 300.0
+        enemyobj.oGravity = -10.0
+        enemyobj.oChainChompTargetPitch = -0x3000
+        enemyobj.oChainChompHitGate = 1
+        chainChompHealth = 4
+    else
+        enemyobj.oVelY = 30.0
     end
 end
-function check_for_kingbobomb(m)
-    if checked == false then
-        enemyobj = obj_get_nearest_object_with_behavior_id(m.marioObj, id_bhvKingBobomb)
-        if enemyobj ~= nil and enemyobj.oDistanceToMario <= 300.0 then
-            checked = true 
-            m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
-            enemyobj.oForwardVel = enemyobj.oForwardVel - 10
-            enemyobj.oVelY = 2
-            if m.action == ACT_COMBO_4 or m.action == ACT_DROPKICK then
-                enemyobj.oForwardVel = enemyobj.oForwardVel - 50
-                enemyobj.oVelY = 20
+
+function check_for_bowser(m, enemyobj)
+    m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
+    enemyobj.oForwardVel = enemyobj.oForwardVel - 20
+    enemyobj.oVelY = 4
+    if m.action == ACT_COMBO_4 or m.action == ACT_DROPKICK then
+        enemyobj.oForwardVel = enemyobj.oForwardVel - 70
+        enemyobj.oVelY = 40
+    end
+end
+function check_for_kingbobomb(m, enemyobj)
+    m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
+    enemyobj.oForwardVel = enemyobj.oForwardVel - 20
+    enemyobj.oVelY = 4
+    if m.action == ACT_COMBO_4 or m.action == ACT_DROPKICK then
+        enemyobj.oForwardVel = enemyobj.oForwardVel - 70
+        enemyobj.oVelY = 40
+    end
+end
+
+kiryu_attack_targets = {
+    [id_bhvBowser] = check_for_bowser,
+    [id_bhvChainChomp] = check_for_chainchomp,
+    [id_bhvKingBobomb] = check_for_kingbobomb,
+}
+
+function check_for_behaviours(m)
+    if gPlayerSyncTable[m.playerIndex].checked == false then
+        --djui_popup_create("\\#ffffdc\\\n"..tostring(kiryu_attack_targets[id_bhvChainChomp]), 6)
+        for key,value in pairs(kiryu_attack_targets) do
+            enemyobj = obj_get_nearest_object_with_behavior_id(m.marioObj,key)
+            if enemyobj ~= nil and enemyobj.oDistanceToMario <= 300.0 then
+                if kiryu_attack_targets[key] then
+                    djui_popup_create("\\#ffffdc\\\n dasdasd", 1)
+                    gPlayerSyncTable[m.playerIndex].checked = true
+                    kiryu_attack_targets[key](m, enemyobj)
+                end
             end
         end
     end
