@@ -112,6 +112,7 @@ function set_mario_model(o)
 end
 
 function mario_update(m)
+
     if gPlayerSyncTable[m.playerIndex].overwriteCharToMario then
         gNetworkPlayers[m.playerIndex].overrideModelIndex = 0
     else
