@@ -65,8 +65,22 @@ function render_boss_health(name, health)
     render_health_bar(health)
 end
 
+gPlayerSyncTable[0].healthbarTimer = 0
+
 function on_hud_render()
-    render_boss_health("King Bobomb", 50)
+    if currentBoss ~= nil then
+        render_boss_health(currentBoss, currentBossHealth)
+    end
+    if prevBossHealth == currentBossHealth then
+        gPlayerSyncTable[0].healthbarTimer = gPlayerSyncTable[0].healthbarTimer + 1
+    else
+        gPlayerSyncTable[0].healthbarTimer = 0
+    end
+    if gPlayerSyncTable[0].healthbarTimer == 300 then
+        currentBoss = nil
+    end
+
+    prevBossHealth = currentBossHealth
 end
 
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)

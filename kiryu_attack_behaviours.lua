@@ -2,6 +2,7 @@ local chainChompHealth = 4
 function check_for_chainchomp(m, enemyobj)
     m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
     chainChompHealth = chainChompHealth - 1
+    currentBoss = "Chain Chomp"
     if chainChompHealth <= 0 then
         --bhv_chain_chomp_gate_update()
         enemyobj.oSubAction = CHAIN_CHOMP_SUB_ACT_LUNGE
@@ -11,10 +12,12 @@ function check_for_chainchomp(m, enemyobj)
         enemyobj.oGravity = -10.0
         enemyobj.oChainChompTargetPitch = -0x3000
         enemyobj.oChainChompHitGate = 1
+        currentBoss = nil
         chainChompHealth = 4
     else
         enemyobj.oVelY = 30.0
     end
+    currentBossHealth = chainChompHealth/4*100
 end
 
 function check_for_bowser(m, enemyobj)
@@ -26,14 +29,23 @@ function check_for_bowser(m, enemyobj)
         enemyobj.oVelY = 40
     end
 end
+local kingBobombHealth = 1
 function check_for_kingbobomb(m, enemyobj)
     m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
-    enemyobj.oForwardVel = enemyobj.oForwardVel - 20
-    enemyobj.oVelY = 4
+    currentBoss = "King Bobomb"
     if m.action == ACT_COMBO_4 or m.action == ACT_DROPKICK then
-        enemyobj.oForwardVel = enemyobj.oForwardVel - 70
+        enemyobj.oForwardVel = enemyobj.oForwardVel - 90
         enemyobj.oVelY = 40
+        kingBobombHealth = kingBobombHealth - 3
+    else
+        enemyobj.oForwardVel = enemyobj.oForwardVel - 20
+        enemyobj.oVelY = 4
+        kingBobombHealth = kingBobombHealth - 1
     end
+    if kingBobombHealth <= 0 then
+        currentBoss = nil
+    end
+    currentBossHealth = kingBobombHealth/20*100
 end
 
 kiryu_attack_targets = {
@@ -49,7 +61,6 @@ function check_for_behaviours(m)
             enemyobj = obj_get_nearest_object_with_behavior_id(m.marioObj,key)
             if enemyobj ~= nil and enemyobj.oDistanceToMario <= 300.0 then
                 if kiryu_attack_targets[key] then
-                    djui_popup_create("\\#ffffdc\\\n dasdasd", 1)
                     gPlayerSyncTable[m.playerIndex].checked = true
                     kiryu_attack_targets[key](m, enemyobj)
                 end
