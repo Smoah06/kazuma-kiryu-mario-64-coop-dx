@@ -29,7 +29,7 @@ function check_for_bowser(m, enemyobj)
         enemyobj.oVelY = 40
     end
 end
-local kingBobombHealth = 1
+local kingBobombHealth = 20
 function check_for_kingbobomb(m, enemyobj)
     m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
     currentBoss = "King Bobomb"
@@ -44,6 +44,13 @@ function check_for_kingbobomb(m, enemyobj)
     end
     if kingBobombHealth <= 0 then
         currentBoss = nil
+        enemyobj.oActiveParticleFlags = enemyobj.oActiveParticleFlags | ACTIVE_PARTICLE_TRIANGLE
+        obj_mark_for_deletion(enemyobj)
+        local star = spawn_default_star(enemyobj.oPosX, enemyobj.oPosY + 100, enemyobj.oPosZ)
+        star.oStarSelectorType = 1
+        bhv_camera_lakitu_init()
+        bhv_camera_lakitu_update()
+        kingBobombHealth = 20
     end
     currentBossHealth = kingBobombHealth/20*100
 end
@@ -59,7 +66,7 @@ function check_for_behaviours(m)
         --djui_popup_create("\\#ffffdc\\\n"..tostring(kiryu_attack_targets[id_bhvChainChomp]), 6)
         for key,value in pairs(kiryu_attack_targets) do
             enemyobj = obj_get_nearest_object_with_behavior_id(m.marioObj,key)
-            if enemyobj ~= nil and enemyobj.oDistanceToMario <= 300.0 then
+            if enemyobj ~= nil and enemyobj.oDistanceToMario <= 450.0 then
                 if kiryu_attack_targets[key] then
                     gPlayerSyncTable[m.playerIndex].checked = true
                     kiryu_attack_targets[key](m, enemyobj)
