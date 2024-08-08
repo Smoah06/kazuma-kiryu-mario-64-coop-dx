@@ -20,14 +20,42 @@ function check_for_chainchomp(m, enemyobj)
     currentBossHealth = chainChompHealth/4*100
 end
 
+local BowserHealth = 20
+
+local function act_select(l)
+    djui_popup_create("llll",2)
+    if l == LEVEL_BOWSER_1 then
+        djui_popup_create("woah",2)
+        BowserHealth = 20
+    end
+    if l == LEVEL_BOWSER_2 then
+        BowserHealth = 40
+    end
+    if l == LEVEL_BOWSER_3 then
+        BowserHealth = 60
+    end
+end
+
 function check_for_bowser(m, enemyobj)
     m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
-    enemyobj.oForwardVel = enemyobj.oForwardVel - 20
-    enemyobj.oVelY = 4
+    currentBoss = "Bowser"
     if m.action == ACT_COMBO_4 or m.action == ACT_DROPKICK then
-        enemyobj.oForwardVel = enemyobj.oForwardVel - 70
+        enemyobj.oForwardVel = enemyobj.oForwardVel - 90
         enemyobj.oVelY = 40
+        BowserHealth = BowserHealth - 3
+    else
+        enemyobj.oForwardVel = enemyobj.oForwardVel - 20
+        enemyobj.oVelY = 4
+        BowserHealth = BowserHealth - 1
     end
+    if BowserHealth <= 0 then
+        currentBoss = nil
+        local key = spawn_sync_object(id_bhvBowserKey, E_MODEL_BOWSER_KEY, enemyobj.oPosX, enemyobj.oPosY + 200, enemyobj.oPosZ, function(o)
+            o.oBehParams = (0 << 24) | (0 << 16) | (0 << 8) | (0)
+        end)
+        obj_mark_for_deletion(enemyobj)
+    end
+    currentBossHealth = BowserHealth/20*100
 end
 local kingBobombHealth = 20
 function check_for_kingbobomb(m, enemyobj)
@@ -75,3 +103,5 @@ function check_for_behaviours(m)
         end
     end
 end
+
+hook_event(HOOK_USE_ACT_SELECT, act_select)

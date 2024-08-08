@@ -67,6 +67,7 @@ end
 
 gPlayerSyncTable[0].healthbarTimer = 0
 
+currentBossHealth = 0
 function on_hud_render()
     if currentBoss ~= nil then
         render_boss_health(currentBoss, currentBossHealth)
