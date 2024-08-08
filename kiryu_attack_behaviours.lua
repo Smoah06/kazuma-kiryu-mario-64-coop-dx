@@ -23,9 +23,7 @@ end
 local BowserHealth = 20
 
 local function act_select(l)
-    djui_popup_create("llll",2)
     if l == LEVEL_BOWSER_1 then
-        djui_popup_create("woah",2)
         BowserHealth = 20
     end
     if l == LEVEL_BOWSER_2 then
