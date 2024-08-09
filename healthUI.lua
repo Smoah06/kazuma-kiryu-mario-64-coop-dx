@@ -48,20 +48,20 @@ local HEALTH_BAR_COLORS = {
 
 local function render_health_bar(health)
 
-    local health_bars = math.floor(health/100 + 0.5)
+    local health_bars = math.floor(health/100)
     local screenWidth = djui_hud_get_screen_width()
-    local width = (health - (health_bars - 1)*100) * 1012/100
+    local width = (health - (health_bars)*100) * 1012/100
 
     local screenHeight = djui_hud_get_screen_height()
     local height = 48
 
     local x = screenWidth - width - 40
     local y = screenHeight*4/5 - height/2
-    if health_bars > 0 then
-        djui_hud_set_color(HEALTH_BAR_COLORS[health_bars][1], HEALTH_BAR_COLORS[health_bars][2], HEALTH_BAR_COLORS[health_bars][3], HEALTH_BAR_COLORS[health_bars][4])
+    if health_bars >= 0 then
+        djui_hud_set_color(HEALTH_BAR_COLORS[health_bars + 1][1], HEALTH_BAR_COLORS[health_bars + 1][2], HEALTH_BAR_COLORS[health_bars + 1][3], HEALTH_BAR_COLORS[health_bars + 1][4])
         djui_hud_render_rect(screenWidth - 1012 - 40, y, 1012, height)
 
-        djui_hud_set_color(HEALTH_BAR_COLORS[health_bars + 1][1], HEALTH_BAR_COLORS[health_bars + 1][2], HEALTH_BAR_COLORS[health_bars + 1][3], HEALTH_BAR_COLORS[health_bars + 1][4])
+        djui_hud_set_color(HEALTH_BAR_COLORS[health_bars + 2][1], HEALTH_BAR_COLORS[health_bars + 2][2], HEALTH_BAR_COLORS[health_bars + 2][3], HEALTH_BAR_COLORS[health_bars + 2][4])
         --djui_hud_render_rect(x, y, width, height)
         djui_hud_render_rect_interpolated(health_prev_x, y, health_prev_width, height, x, y, width, height)
     end
