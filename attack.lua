@@ -11,6 +11,7 @@ PUNCH_2_SOUND = audio_sample_load("punch2.ogg")
 PUNCH_3_SOUND = audio_sample_load("punch4.ogg") --why you may ask? idk
 PUNCH_4_SOUND = audio_sample_load("punch3.ogg")
 DROPKICK_SOUND = audio_sample_load("dropkick.ogg")
+HIT_SOUND = audio_sample_load("hit_sfx.ogg")
 
 
 function kiryu_attack(m)
@@ -194,6 +195,7 @@ function on_interact(m, o, intType, value)
     }
 
     if (o.oInteractStatus & INT_STATUS_WAS_ATTACKED) ~= 0 then
+        audio_sample_play(HIT_SOUND, m.pos, 1)
         if m.action == ACT_COMBO_1 or m.action == ACT_COMBO_2 or m.action == ACT_COMBO_3 or m.action == ACT_COMBO_4 then
             m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
             o.oVelY = 30

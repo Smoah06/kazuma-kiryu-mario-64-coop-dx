@@ -24,13 +24,13 @@ local BowserHealth = 20
 
 local function act_select(l)
     if l == LEVEL_BOWSER_1 then
-        BowserHealth = 20
+        BowserHealth = 30
     end
     if l == LEVEL_BOWSER_2 then
-        BowserHealth = 40
+        BowserHealth = 60
     end
     if l == LEVEL_BOWSER_3 then
-        BowserHealth = 60
+        BowserHealth = 90
     end
 end
 
@@ -53,7 +53,7 @@ function check_for_bowser(m, enemyobj)
         end)
         obj_mark_for_deletion(enemyobj)
     end
-    currentBossHealth = BowserHealth/20*100
+    currentBossHealth = BowserHealth/30*100
 end
 local kingBobombHealth = 20
 function check_for_kingbobomb(m, enemyobj)
@@ -95,6 +95,7 @@ function check_for_behaviours(m)
             if enemyobj ~= nil and enemyobj.oDistanceToMario <= 450.0 then
                 if kiryu_attack_targets[key] then
                     gPlayerSyncTable[m.playerIndex].checked = true
+                    audio_sample_play(HIT_SOUND, m.pos, 1)
                     kiryu_attack_targets[key](m, enemyobj)
                 end
             end
