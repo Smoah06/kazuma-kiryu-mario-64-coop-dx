@@ -1,4 +1,24 @@
-local chainChompHealth = 4
+local BowserHealth
+
+local chainChompHealth
+local kingBobombHealth = 1
+
+local function act_select(l)
+    if l == LEVEL_BOWSER_1 then
+        BowserHealth = 30
+    end
+    if l == LEVEL_BOWSER_2 then
+        BowserHealth = 60
+    end
+    if l == LEVEL_BOWSER_3 then
+        BowserHealth = 90
+    end
+    if l == LEVEL_BOB then
+        chainChompHealth = 4
+        kingBobombHealth = 20
+    end
+end
+
 function check_for_chainchomp(m, enemyobj)
     m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
     chainChompHealth = chainChompHealth - 1
@@ -13,25 +33,10 @@ function check_for_chainchomp(m, enemyobj)
         enemyobj.oChainChompTargetPitch = -0x3000
         enemyobj.oChainChompHitGate = 1
         currentBoss = nil
-        chainChompHealth = 4
     else
         enemyobj.oVelY = 30.0
     end
     currentBossHealth = chainChompHealth/4*100
-end
-
-local BowserHealth = 20
-
-local function act_select(l)
-    if l == LEVEL_BOWSER_1 then
-        BowserHealth = 30
-    end
-    if l == LEVEL_BOWSER_2 then
-        BowserHealth = 60
-    end
-    if l == LEVEL_BOWSER_3 then
-        BowserHealth = 90
-    end
 end
 
 function check_for_bowser(m, enemyobj)
@@ -55,7 +60,7 @@ function check_for_bowser(m, enemyobj)
     end
     currentBossHealth = BowserHealth/30*100
 end
-local kingBobombHealth = 20
+
 function check_for_kingbobomb(m, enemyobj)
     m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
     currentBoss = "King Bobomb"
@@ -72,11 +77,14 @@ function check_for_kingbobomb(m, enemyobj)
         currentBoss = nil
         enemyobj.oActiveParticleFlags = enemyobj.oActiveParticleFlags | ACTIVE_PARTICLE_TRIANGLE
         obj_mark_for_deletion(enemyobj)
-        local star = spawn_default_star(enemyobj.oPosX, enemyobj.oPosY + 100, enemyobj.oPosZ)
-        star.oStarSelectorType = 1
+        local star = spawn_non_sync_object(id_bhvSpawnedStar, E_MODEL_STAR, enemyobj.oPosX, enemyobj.oPosY + 200, enemyobj.oPosZ, function(o)
+        end)
+        star.oBehParams = (0x01 << 24)
+        star.oInteractStatus = 0
         bhv_camera_lakitu_init()
         bhv_camera_lakitu_update()
-        kingBobombHealth = 20
+
+
     end
     currentBossHealth = kingBobombHealth/20*100
 end
