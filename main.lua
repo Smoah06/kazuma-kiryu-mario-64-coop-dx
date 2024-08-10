@@ -94,7 +94,7 @@ if _G.charSelectExists then
 else
     hook_chat_command(
         "kiryu",
-        "[\\#00C7FF\\on\\#ffffff\\|\\#A02200\\off\\#ffffff\\] turn \\#de04fa\\Milne \\#00C7FF\\on \\#ffffff\\or \\#A02200\\off",
+        "[\\#00C7FF\\on\\#ffffff\\|\\#A02200\\off\\#ffffff\\] turn \\#de04fa\\Kiryu \\#00C7FF\\on \\#ffffff\\or \\#A02200\\off",
         kiryu_command
     )
     djui_popup_create("\\#ffffdc\\\n To use "..TEXT_MOD_NAME.."\nDownload Character Select Mod\n or type the command \\#00ff37\\ /kiryu on", 6)
