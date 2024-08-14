@@ -191,7 +191,8 @@ function on_interact(m, o, intType, value)
 
     if gPlayerSyncTable[m.playerIndex].charMoveset ~= true then
         return
-
+    end
+    
     -- Properly grab stuff. (Bit taken from Sharen's Pasta Castle)
     local grabActions = {
         [ACT_KIRYU_ATTACK] = true
