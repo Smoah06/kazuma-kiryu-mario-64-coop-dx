@@ -41,7 +41,7 @@ function combo1(m)
 
     set_mario_animation(m, CHAR_ANIM_FIRST_PUNCH)
 
-    smlua_anim_util_set_animation(m.marioObj, "Punch1")
+    smlua_anim_util_set_animation(m.marioObj, "K_Punch1")
 
     if m.actionTimer < 4 then
         mario_set_forward_vel(m, 20)
@@ -70,7 +70,7 @@ function combo2(m)
 
     set_mario_animation(m, CHAR_ANIM_SECOND_PUNCH)
 
-    smlua_anim_util_set_animation(m.marioObj, "Punch2")
+    smlua_anim_util_set_animation(m.marioObj, "K_Punch2")
 
     if m.actionTimer < 3 then
         mario_set_forward_vel(m, 5)
@@ -99,7 +99,7 @@ function combo3(m)
 
     set_mario_animation(m, CHAR_ANIM_FIRST_PUNCH)
 
-    smlua_anim_util_set_animation(m.marioObj, "Punch3")
+    smlua_anim_util_set_animation(m.marioObj, "K_Punch3")
 
     if m.actionTimer < 3 then
         mario_set_forward_vel(m, 5)
@@ -129,7 +129,7 @@ function combo4(m)
 
     set_mario_animation(m, CHAR_ANIM_SECOND_PUNCH)
     
-    smlua_anim_util_set_animation(m.marioObj, "Punch4")
+    smlua_anim_util_set_animation(m.marioObj, "K_Punch4")
 
     if m.actionTimer < 4 then
         mario_set_forward_vel(m, 15)
@@ -149,7 +149,7 @@ end
 function dropkick(m)
     set_mario_animation(m, CHAR_ANIM_DIVE)
 
-    smlua_anim_util_set_animation(m.marioObj, "DropKick")
+    smlua_anim_util_set_animation(m.marioObj, "K_DropKick")
     --m.forwardVel = 15
     if m.actionTimer == 0 then
         gPlayerSyncTable[m.playerIndex].checked = false
@@ -188,6 +188,9 @@ function act_kiryu_bowser_throw(m)
 end
 
 function on_interact(m, o, intType, value)
+
+    if gPlayerSyncTable[m.playerIndex].charMoveset ~= true then
+        return
 
     -- Properly grab stuff. (Bit taken from Sharen's Pasta Castle)
     local grabActions = {

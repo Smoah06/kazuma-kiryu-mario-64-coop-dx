@@ -1,4 +1,4 @@
-smlua_anim_util_register_animation("Punch1",
+smlua_anim_util_register_animation("K_Punch1",
     1,
     0,
     0,
@@ -101,7 +101,7 @@ smlua_anim_util_register_animation("Punch1",
     }
 )
 
-smlua_anim_util_register_animation("Punch2",
+smlua_anim_util_register_animation("K_Punch2",
     1,
     0,
     0,
@@ -208,7 +208,7 @@ smlua_anim_util_register_animation("Punch2",
         0x02AD, 0x0010, 0x02BC, 0x000C, 0x02CC, 0x0001, 0x02D8, 0x0001, 0x02D9, 
     }
 )
-smlua_anim_util_register_animation("Punch3",
+smlua_anim_util_register_animation("K_Punch3",
     1,
     0,
     0,
@@ -319,7 +319,7 @@ smlua_anim_util_register_animation("Punch3",
         
     }
 )
-smlua_anim_util_register_animation("Punch4",
+smlua_anim_util_register_animation("K_Punch4",
     1,
     0,
     0,
@@ -491,7 +491,7 @@ smlua_anim_util_register_animation("Punch4",
         0x04DF, 0x0019, 0x04F8, 0x0018, 0x0511, 0x0001, 0x0529, 0x0001, 0x052A, 
     }
 )
-smlua_anim_util_register_animation("DropKick",
+smlua_anim_util_register_animation("K_DropKick",
     1,
 	0,
 	0,
@@ -617,7 +617,7 @@ smlua_anim_util_register_animation("DropKick",
     }
 )
 
-smlua_anim_util_register_animation("Idle",
+smlua_anim_util_register_animation("K_Idle",
     0,
 	0,
 	0,
@@ -871,7 +871,7 @@ smlua_anim_util_register_animation("Idle",
         0x0789, 0x003D, 0x078A, 0x003D, 0x07C7, 0x0001, 0x0804, 0x0001, 0x0805, 
     }
 )
-smlua_anim_util_register_animation("Run",
+smlua_anim_util_register_animation("K_Run",
     0,
     0,
     0,
@@ -1278,10 +1278,10 @@ function mario_update(m)
         return
     end
     if m.action == ACT_IDLE then
-        smlua_anim_util_set_animation(m.marioObj, "Idle")
+        smlua_anim_util_set_animation(m.marioObj, "K_Idle")
     end
     if m.action == ACT_WALKING then
-        smlua_anim_util_set_animation(m.marioObj, "Run")
+        smlua_anim_util_set_animation(m.marioObj, "K_Run")
     end
 end
 
